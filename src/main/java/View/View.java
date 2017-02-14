@@ -37,7 +37,7 @@ public class View extends JPanel{
 
     public void paint(Graphics g) {
         super.paint(g);
-        setBackground(Color.black);
+        setBackground(Color.gray);
         theModel.getMap().draw(g);
     }
 }
