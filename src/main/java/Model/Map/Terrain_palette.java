@@ -39,13 +39,17 @@ public class Terrain_palette {
 
         if (between(value, 0.0, 0.39)) {
 
-            color = new Color(22, 114, 163);
-            color = calculate_color(color, value);
+
+            color = new Color(0, 0, value);
+
+            //color = new Color(22, 114, 163);
+            //color = calculate_color(color, value);
 
         } else if (between(value, 0.4, 1)) {
 
-            color = new Color(49, 105, 10);
-            color = calculate_color(color, value);
+            color = new Color(0, value, 0);
+            //color = new Color(49, 105, 10);
+            //color = calculate_color(color, value);
         }
 
         return color;
@@ -56,7 +60,7 @@ public class Terrain_palette {
         float[] hsl = new float[3];
         Blender.RGBtoHSL(color.getRed(), color.getGreen(), color.getBlue(), hsl);
 
-        hsl[2] = value; // needs looking at later, may crete out of bounds error
+        hsl[2] = hsl[2]+value; // needs looking at later, may crete out of bounds error
         int[] rgb = new int[3];
         Blender.HSLtoRGB(hsl[0], hsl[1], hsl[2], rgb);
 

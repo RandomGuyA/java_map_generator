@@ -12,13 +12,13 @@ import java.awt.image.BufferedImage;
 
 public class Terrain implements Drawable {
 
+    private int COUNT_X = 640;
+    private int COUNT_Y = 480;
+    private int SQUARE_SIZE = 1;
+    private float HARD_LIGHT_DERIVATIVE = 0.3f;
+    private float MASK_MINIMUM = 0.45f;
+    private float MASK_MAXIMUM = 0.55f;
 
-    private int COUNT_X = 100;
-    private int COUNT_Y = 100;
-    private int SQUARE_SIZE = 4;
-    private float HARD_LIGHT_DERIVATIVE = 0.5f;
-    private float MASK_MINIMUM = 0.75f;
-    private float MASK_MAXIMUM = 0.80f;
     private int TERRAIN_FREQUENCY = 4;
 
     private int width = COUNT_X * SQUARE_SIZE;
@@ -33,7 +33,8 @@ public class Terrain implements Drawable {
 
         int terrain_seed = Util.randInt(1, 500);
 
-        terrain_layer = Noise_generator.get_custom_land_generation(COUNT_X, COUNT_Y, TERRAIN_FREQUENCY, terrain_seed);
+       // terrain_layer = Noise_generator.get_custom_land_generation(COUNT_X, COUNT_Y, TERRAIN_FREQUENCY, terrain_seed);
+        terrain_layer = Noise_generator.generate_simplex_noise(COUNT_X, COUNT_Y);
         terrain_image = convert_float_array_to_buffered_image(terrain_layer, SQUARE_SIZE, new Terrain_palette("analog"));
 
         //Util.printArray(noise_layer);
