@@ -9,12 +9,13 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 
+
 public class Terrain implements Drawable {
 
 
     private int COUNT_X = 100;
     private int COUNT_Y = 100;
-    private int SQUARE_SIZE = 32;
+    private int SQUARE_SIZE = 4;
     private float HARD_LIGHT_DERIVATIVE = 0.5f;
     private float MASK_MINIMUM = 0.75f;
     private float MASK_MAXIMUM = 0.80f;
@@ -37,6 +38,22 @@ public class Terrain implements Drawable {
 
         //Util.printArray(noise_layer);
     }
+    /*
+    public apply_quadratic_distance() {
+
+        float distance_x = Math.abs(x - island_size * 0.5f);
+        float distance_y = Math.abs(y - island_size * 0.5f);
+        float distance = Math.sqrt(distance_x * distance_x + distance_y * distance_y); // circular mask
+
+        float max_width = island_size * 0.5f - 10.0f;
+        float delta = distance / max_width;
+        float gradient = delta * delta;
+
+        noise *= Math.max(0.0f, 1.0f - gradient);
+
+        return noise;
+    }
+    */
 
 
     public BufferedImage convert_float_array_to_buffered_image(float[][] float_array, int square_size, Terrain_palette palette) {
