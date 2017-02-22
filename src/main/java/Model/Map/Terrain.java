@@ -2,7 +2,7 @@ package Model.Map;
 
 import Model.Interfaces.Drawable;
 import libnoiseforjava.exception.ExceptionInvalidParam;
-import libnoiseforjava.module.Perlin;
+import libnoiseforjava.module.Spheres;
 import libnoiseforjava.util.*;
 
 import java.awt.*;
@@ -55,15 +55,16 @@ public class Terrain implements Drawable {
 
     public void make_map() {
 
-        Perlin perlin1 = new Perlin();
+        Spheres noiseModule = new Spheres();
 
         try {
+
             // create Noisemap object
             NoiseMap heightMap = new NoiseMap(256, 256);
 
             // create Builder object
             NoiseMapBuilderPlane heightMapBuilder = new NoiseMapBuilderPlane();
-            heightMapBuilder.setSourceModule(perlin1);
+            heightMapBuilder.setSourceModule(noiseModule);
             heightMapBuilder.setDestNoiseMap(heightMap);
             heightMapBuilder.setDestSize(256, 256);
 
