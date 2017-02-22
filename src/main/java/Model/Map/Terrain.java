@@ -1,9 +1,9 @@
 package Model.Map;
 
-import Model.Helper.BlendComposite;
-import Model.Helper.Noise_generator;
-import Model.Helper.Util;
 import Model.Interfaces.Drawable;
+import libnoiseforjava.exception.ExceptionInvalidParam;
+import libnoiseforjava.module.Perlin;
+import libnoiseforjava.util.*;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -27,6 +27,7 @@ public class Terrain implements Drawable {
 
     public Terrain() {
 
+        /*
         noise_layer = Noise_generator.get_noise(width, height, 520, MASK_MINIMUM, MASK_MAXIMUM);
 
         terrain_mask = convert_float_array_to_buffered_image(noise_layer, 1, new Terrain_palette("basic"));
@@ -43,8 +44,95 @@ public class Terrain implements Drawable {
 
 
         terrain_image = multiply(radial_mask, terrain_layer);
+        */
+
+        // create Perlin noise module object
+
+        make_map();
+
+    }
 
 
+    public void make_map() {
+
+        Perlin perlin1 = new Perlin();
+
+        try {
+            // create Noisemap object
+            NoiseMap heightMap = new NoiseMap(256, 256);
+
+            // create Builder object
+            NoiseMapBuilderPlane heightMapBuilder = new NoiseMapBuilderPlane();
+            heightMapBuilder.setSourceModule(perlin1);
+            heightMapBuilder.setDestNoiseMap(heightMap);
+            heightMapBuilder.setDestSize(256, 256);
+
+
+            heightMapBuilder.setBounds(2.0, 6.0, 1.0, 5.0);
+
+            heightMapBuilder.build();
+
+            // create renderer object
+            RendererImage renderer = new RendererImage();
+
+            // terrain gradient
+            renderer.clearGradient();
+            renderer.addGradientPoint(-1.0000, new ColorCafe(7, 52, 127, 255)); // deeps
+            renderer.addGradientPoint(-0.2500, new ColorCafe(14, 104, 255, 255)); // shallow
+            renderer.addGradientPoint(0.0000, new ColorCafe(14, 158, 255, 255)); // shore
+            renderer.addGradientPoint(0.0625, new ColorCafe(229, 228, 124, 255)); // sand
+            renderer.addGradientPoint(0.1250, new ColorCafe(91, 255, 75, 255)); // grass
+            renderer.addGradientPoint(0.3750, new ColorCafe(127, 102, 50, 255)); // dirt
+            renderer.addGradientPoint(0.7500, new ColorCafe(128, 128, 128, 255)); // rock
+            renderer.addGradientPoint(1.0000, new ColorCafe(255, 255, 255, 255)); // snow
+
+
+            // Set up the texture renderer and pass the noise map to it.
+            ImageCafe destTexture = new ImageCafe(heightMap.getWidth(), heightMap.getHeight());
+            renderer.setSourceNoiseMap(heightMap);
+            renderer.setDestImage(destTexture);
+            renderer.enableLight(true);
+            renderer.setLightContrast(2.0); // Triple the contrast
+            renderer.setLightBrightness(2.0); // Double the brightness
+
+
+            // Render the texture.
+            renderer.render();
+            terrain_image = buffBuilder(destTexture.getHeight(), destTexture.getWidth(), destTexture);
+
+        } catch (ExceptionInvalidParam exceptionInvalidParam) {
+            exceptionInvalidParam.printStackTrace();
+        }
+
+
+    }
+
+    public static BufferedImage buffBuilder(int height, int width, ImageCafe imageCafe) {
+
+        BufferedImage im = new BufferedImage(height, width, BufferedImage.TYPE_INT_ARGB);
+
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                int c = getRGBA(imageCafe.getValue(i, j));
+                im.setRGB(i, j, c);
+            }
+        }
+        return im;
+    }
+
+    public static final int getRGBA(ColorCafe colorCafe) {
+        int red, blue, green, alpha;
+        red = colorCafe.getRed();
+        blue = colorCafe.getBlue();
+        green = colorCafe.getGreen();
+        alpha = colorCafe.getAlpha();
+        Color color = new Color(red, green, blue, alpha);
+        int rgbnumber = color.getRGB();
+        return rgbnumber;
+    }
+
+    public void draw(Graphics g) {
+        g.drawImage(terrain_image, 0, 0, null);
     }
 
     public float[][] apply_quadratic_distance(int width, int height) {
@@ -76,7 +164,7 @@ public class Terrain implements Drawable {
         return (max - min) * norm + min;
     }
 
-    private  BufferedImage multiply(float[][] image_a, float[][] image_b) {
+    private BufferedImage multiply(float[][] image_a, float[][] image_b) {
 
         int width = image_a.length;
         int height = image_a[0].length;
@@ -94,8 +182,8 @@ public class Terrain implements Drawable {
 
                 double alpha = 0.5;
 
-                Color aColor = new Color(aPixel,aPixel,aPixel);
-                Color bColor = new Color(bPixel,bPixel,bPixel);
+                Color aColor = new Color(aPixel, aPixel, aPixel);
+                Color bColor = new Color(bPixel, bPixel, bPixel);
                 int src = aColor.getRGB();
                 int dest = bColor.getRGB();
 
@@ -107,17 +195,16 @@ public class Terrain implements Drawable {
                 int b2 = dest & 0xFF;
                 int ar, ag, ab;
 
-                ar = (int) (alpha * (double)(r1 - r2) + r2);
-                ag = (int) (alpha * (double)(g1 - g2) + g2);
-                ab = (int) (alpha * (double)(b1 - b2) + b2);
+                ar = (int) (alpha * (double) (r1 - r2) + r2);
+                ag = (int) (alpha * (double) (g1 - g2) + g2);
+                ab = (int) (alpha * (double) (b1 - b2) + b2);
 
-                int pixel =  ab | (ag << 8) | (ar << 16);
-                bufferedImage.setRGB(x,y, pixel);
+                int pixel = ab | (ag << 8) | (ar << 16);
+                bufferedImage.setRGB(x, y, pixel);
             }
         }
         return bufferedImage;
     }
-
 
     public BufferedImage convert_float_array_to_buffered_image(float[][] float_array, int square_size, Terrain_palette palette) {
 
@@ -142,7 +229,9 @@ public class Terrain implements Drawable {
         return bufferedImage;
     }
 
-    public void draw(Graphics g) {
+
+
+    /*public void draw(Graphics g) {
 
         Graphics2D g2D = (Graphics2D) g;
         //g.drawImage(terrain_image, 0, 0, null);
@@ -153,5 +242,5 @@ public class Terrain implements Drawable {
         big.setComposite(BlendComposite.Multiply.derive(HARD_LIGHT_DERIVATIVE));
         big.drawImage(terrain_mask, 0, 0, null);
         g2D.drawImage(bufferedImage, null, 0, 0);
-    }
+    }*/
 }

@@ -12,5 +12,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="libnoiseforjava" level="project" />
+    <orderEntry type="library" name="libnoiseforjava1" level="project" />
   </component>
 </module>

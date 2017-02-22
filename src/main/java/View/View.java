@@ -10,7 +10,7 @@ import java.awt.event.ActionListener;
 
 public class View extends JPanel{
 
-    private int DELAY = 10;
+    private int DELAY = 1000;
     private Timer timer;
     private Model theModel;
 
