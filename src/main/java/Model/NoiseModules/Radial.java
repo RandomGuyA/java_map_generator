@@ -6,52 +6,40 @@ import libnoiseforjava.module.ModuleBase;
 public class Radial extends ModuleBase
 {
 
+    double DEFAULT_RADIAL_FREQUENCY = 0.15;
+    double DEFAULT_MAX_WIDTH = 1.0;
 
-    static final double DEFAULT_SPHERES_FREQUENCY = 1.0;
-
-    /// Frequency of the concentric spheres.
     double frequency;
+    double max_width;
 
 
-    public Radial ()
-    {
+    public Radial (){
         super(0);
-        frequency = DEFAULT_SPHERES_FREQUENCY;
+        frequency = DEFAULT_RADIAL_FREQUENCY;
+        max_width = DEFAULT_MAX_WIDTH;
     }
 
     public double getValue (double x, double y, double z)
     {
+
         x *= frequency;
         y *= frequency;
         z *= frequency;
 
-        double distFromCenter = Math.sqrt (x * x + y * y + z * z);
-        double distFromSmallerSphere = distFromCenter - Math.floor (distFromCenter);
-        double distFromLargerSphere = 1.0 - distFromSmallerSphere;
-        double nearestDist = Math.min(distFromSmallerSphere, distFromLargerSphere);
-        return 1.0 - (nearestDist * 4.0); // Puts it in the -1.0 to +1.0 range.
+        double distance_from_center  = Math.sqrt (x * x + y * y + z * z);
+
+        double delta = distance_from_center / max_width;
+        double grad = delta * delta;
+
+        return Math.max(-1.0f, 1.0f - grad);
+
     }
 
-    /// Returns the frequency of the concentric spheres.
-    ///
-    /// @returns The frequency of the concentric spheres.
-    ///
-    /// Increasing the frequency increases the density of the concentric
-    /// spheres, reducing the distances between them.
-    public double getFrequency ()
-    {
-        return frequency;
+    public double getMax_width() {
+        return max_width;
     }
 
-    /// Sets the frequency of the concentric spheres.
-    ///
-    /// @param frequency The frequency of the concentric spheres.
-    ///
-    /// Increasing the frequency increases the density of the concentric
-    /// spheres, reducing the distances between them.
-    public void setFrequency (double frequency)
-    {
-        this.frequency = frequency;
+    public void setMax_width(double max_width) {
+        this.max_width = max_width;
     }
-
 }
