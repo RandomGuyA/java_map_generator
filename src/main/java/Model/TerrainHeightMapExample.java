@@ -18,15 +18,12 @@ public class TerrainHeightMapExample
     // http://libnoise.sourceforge.net/tutorials/tutorial3.html
     public static void main(String[] args) throws ExceptionInvalidParam {
 
+        int WIDTH = 256;
+        int HEIGHT = 256;
 
-        int WIDTH = 1024;
-        int HEIGHT = 1024;
         Perlin noiseModule = new Perlin();
         noiseModule.setFrequency(0.1);
         noiseModule.setSeed(998);
-
-
-
 
         Radial radial = new Radial();
         radial.setMax_width(1.5);
@@ -41,8 +38,6 @@ public class TerrainHeightMapExample
         heightMapBuilder.setSourceModule(add);
         heightMapBuilder.setDestNoiseMap(heightMap);
         heightMapBuilder.setDestSize(WIDTH, HEIGHT);
-
-
 
 
         heightMapBuilder.setBounds(-14.0, 14.0, -14.0, 14.0);
