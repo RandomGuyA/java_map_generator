@@ -53,7 +53,8 @@ public class Terrain implements Drawable {
         make_map();
 
     }
-    public void make_normal_map(){
+
+    public void make_normal_map() {
 
     }
 
@@ -96,6 +97,9 @@ public class Terrain implements Drawable {
 
             // terrain gradient
             renderer.clearGradient();
+            renderer.addGradientPoint(-1.0, new ColorCafe(0, 0, 0, 255)); //Black
+            renderer.addGradientPoint(1.0, new ColorCafe(255, 255, 255, 255)); //White
+            /*
             renderer.addGradientPoint(-0.8500, new ColorCafe(7, 52, 127, 255)); // deeps
             renderer.addGradientPoint(-0.6000, new ColorCafe(14, 104, 255, 255)); // shallow
             renderer.addGradientPoint(-0.5000, new ColorCafe(14, 158, 255, 255)); // shore
@@ -104,6 +108,7 @@ public class Terrain implements Drawable {
             renderer.addGradientPoint(0.5000, new ColorCafe(127, 102, 50, 255)); // dirt
             renderer.addGradientPoint(0.6000, new ColorCafe(128, 128, 128, 255)); // rock
             renderer.addGradientPoint(1.0000, new ColorCafe(255, 255, 255, 255)); // snow
+            */
 
             // Set up the texture renderer and pass the noise map to it.
             ImageCafe destTexture = new ImageCafe(heightMap.getWidth(), heightMap.getHeight());
