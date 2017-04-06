@@ -53,14 +53,16 @@ public class Terrain implements Drawable {
         make_map();
 
     }
+    public void make_normal_map(){
 
+    }
 
     public void make_map() {
 
         try {
 
-            int WIDTH = 256;
-            int HEIGHT = 256;
+            int WIDTH = 512;
+            int HEIGHT = 512;
 
             Perlin noiseModule = new Perlin();
             noiseModule.setFrequency(0.1);
@@ -69,17 +71,18 @@ public class Terrain implements Drawable {
             Radial radial = new Radial();
             radial.setMax_width(2.0);
 
+            /*
             Add add = new Add(radial, noiseModule);
-
             ScaleBias scaleBias = new ScaleBias(add);
             scaleBias.setBias(-0.55);
+            */
 
             // create Noisemap object
             NoiseMap heightMap = new NoiseMap(WIDTH, HEIGHT);
 
             // create Builder object
             NoiseMapBuilderPlane heightMapBuilder = new NoiseMapBuilderPlane();
-            heightMapBuilder.setSourceModule(scaleBias);
+            heightMapBuilder.setSourceModule(noiseModule);
             heightMapBuilder.setDestNoiseMap(heightMap);
             heightMapBuilder.setDestSize(WIDTH, HEIGHT);
 
@@ -93,13 +96,13 @@ public class Terrain implements Drawable {
 
             // terrain gradient
             renderer.clearGradient();
-            renderer.addGradientPoint(-1.0000, new ColorCafe(7, 52, 127, 255)); // deeps
-            renderer.addGradientPoint(-0.2500, new ColorCafe(14, 104, 255, 255)); // shallow
-            renderer.addGradientPoint(0.0000, new ColorCafe(14, 158, 255, 255)); // shore
-            renderer.addGradientPoint(0.0625, new ColorCafe(229, 228, 124, 255)); // sand
-            renderer.addGradientPoint(0.4000, new ColorCafe(0, 105, 19, 255)); // grass
-            renderer.addGradientPoint(0.7000, new ColorCafe(127, 102, 50, 255)); // dirt
-            renderer.addGradientPoint(0.8500, new ColorCafe(128, 128, 128, 255)); // rock
+            renderer.addGradientPoint(-0.8500, new ColorCafe(7, 52, 127, 255)); // deeps
+            renderer.addGradientPoint(-0.6000, new ColorCafe(14, 104, 255, 255)); // shallow
+            renderer.addGradientPoint(-0.5000, new ColorCafe(14, 158, 255, 255)); // shore
+            renderer.addGradientPoint(-0.4625, new ColorCafe(229, 228, 124, 255)); // sand
+            renderer.addGradientPoint(-0.200, new ColorCafe(0, 105, 19, 255)); // grass
+            renderer.addGradientPoint(0.5000, new ColorCafe(127, 102, 50, 255)); // dirt
+            renderer.addGradientPoint(0.6000, new ColorCafe(128, 128, 128, 255)); // rock
             renderer.addGradientPoint(1.0000, new ColorCafe(255, 255, 255, 255)); // snow
 
             // Set up the texture renderer and pass the noise map to it.
@@ -121,8 +124,6 @@ public class Terrain implements Drawable {
         } catch (ExceptionInvalidParam exceptionInvalidParam) {
             exceptionInvalidParam.printStackTrace();
         }
-
-
     }
 
     public static BufferedImage buffBuilder(int height, int width, ImageCafe imageCafe) {
