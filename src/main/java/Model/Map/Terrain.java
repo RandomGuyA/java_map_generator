@@ -25,6 +25,7 @@ public class Terrain implements Drawable {
     private int width = COUNT_X * SQUARE_SIZE;
     private int height = COUNT_Y * SQUARE_SIZE;
     private BufferedImage terrain_image, terrain_mask;
+    private Tile[][] tile_map;
     private float[][] noise_layer, terrain_layer;
 
     public Terrain() {
@@ -54,10 +55,6 @@ public class Terrain implements Drawable {
 
     }
 
-    public void make_normal_map() {
-
-    }
-
     public void make_map() {
 
         try {
@@ -72,18 +69,18 @@ public class Terrain implements Drawable {
             Radial radial = new Radial();
             radial.setMax_width(2.0);
 
-            /*
+
             Add add = new Add(radial, noiseModule);
             ScaleBias scaleBias = new ScaleBias(add);
             scaleBias.setBias(-0.55);
-            */
+
 
             // create Noisemap object
             NoiseMap heightMap = new NoiseMap(WIDTH, HEIGHT);
 
             // create Builder object
             NoiseMapBuilderPlane heightMapBuilder = new NoiseMapBuilderPlane();
-            heightMapBuilder.setSourceModule(noiseModule);
+            heightMapBuilder.setSourceModule(scaleBias);
             heightMapBuilder.setDestNoiseMap(heightMap);
             heightMapBuilder.setDestSize(WIDTH, HEIGHT);
 
@@ -125,6 +122,7 @@ public class Terrain implements Drawable {
             // Render the texture.
             renderer.render();
             terrain_image = buffBuilder(destTexture.getHeight(), destTexture.getWidth(), destTexture);
+            tile_map = tile_array_builder(destTexture.getHeight(), destTexture.getWidth(), destTexture);
 
         } catch (ExceptionInvalidParam exceptionInvalidParam) {
             exceptionInvalidParam.printStackTrace();
@@ -143,6 +141,26 @@ public class Terrain implements Drawable {
         }
         return im;
     }
+
+    public static Tile[][] tile_array_builder(int height, int width, ImageCafe imageCafe) {
+
+        Tile[][] tile_map = new Tile[width][height];
+
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+
+                int rgb = getRGBA(imageCafe.getValue(x, y));
+                int red = (rgb >> 16) & 0xFF;
+
+                double value = red*(1/255f);
+                Tile tile = new Tile();
+                tile.setValue(value);
+                tile_map[x][y] = tile;
+            }
+        }
+        return tile_map;
+    }
+
 
     public static final int getRGBA(ColorCafe colorCafe) {
         int red, blue, green, alpha;
@@ -253,7 +271,9 @@ public class Terrain implements Drawable {
         return bufferedImage;
     }
 
-
+    public Tile[][] getTile_map() {
+        return tile_map;
+    }
 
     /*public void draw(Graphics g) {
 
