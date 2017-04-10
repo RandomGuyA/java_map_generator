@@ -13,6 +13,7 @@ public class TextureBuilder {
     private BufferedImage texture;
     private int WIDTH, HEIGHT, x, y;
 
+
     public TextureBuilder(ColorCafe colorCafe, int WIDTH, int HEIGHT, int x, int y) {
         this.HEIGHT = HEIGHT;
         this.WIDTH = WIDTH;
@@ -25,7 +26,7 @@ public class TextureBuilder {
     public BufferedImage buildTexture(ColorCafe color) {
         BufferedImage image = null;
         Perlin noiseModule = new Perlin();
-        noiseModule.setFrequency(0.03);
+        noiseModule.setFrequency(0.05);
         noiseModule.setSeed(20152);
 
         // create Noisemap object
@@ -94,7 +95,7 @@ public class TextureBuilder {
     }
 
     private void colourRender(RendererImage renderer, ColorCafe color) {
-        color = new ColorCafe(171, 140, 107, 255);
+        //color = new ColorCafe(171, 140, 107, 255);
         float[] hsl = new float[3];
         Blender.RGBtoHSL(color.getRed(), color.getGreen(), color.getBlue(), hsl);
 

@@ -1,6 +1,7 @@
 package Model.Map;
 
 import Model.Interfaces.Drawable;
+import libnoiseforjava.util.ColorCafe;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -18,31 +19,47 @@ public class TileMap implements Drawable {
         this.width = tile_map.length;
         this.height = tile_map[0].length;
         this.tile_width = tile_width;
-        this.tile_height= tile_height;
+        this.tile_height = tile_height;
         horizontal_mask = load_image("/blend_mask_h_32.png");
         vertical_mask = load_image("/blend_mask_v_32.png");
         //build_tiles();
-         //blend_tiles();
+
+        blend_tiles();
     }
 
     private void blend_tiles() {
-
+        int count = 0;
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                if (x < width - 1) {
+                if (x < width - 1 && y < height - 1) {
+                    System.out.println(++count);
                     BufferedImage image_1 = tile_map[x][y].getImage();
-                    BufferedImage image_2 = tile_map[x + 1][y].getImage();
-                    tile_map[x][y].setImage(blend(image_1, image_2, horizontal_mask));
-                }
-            }
-        }
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
-                if (y < height - 1) {
+                    ColorCafe color2 = tile_map[x + 1][y].getBaseColor();
+                    TextureBuilder textureBuilder2 = new TextureBuilder(color2, tile_width, tile_height, x, y);
+
+                    BufferedImage mask1 = blend(image_1, textureBuilder2.getTexture(), horizontal_mask);
+
+                    ColorCafe color3 = tile_map[x][y + 1].getBaseColor();
+                    ColorCafe color4 = tile_map[x + 1][y + 1].getBaseColor();
+
+                    TextureBuilder textureBuilder3 = new TextureBuilder(color3, tile_width, tile_height, x, y);
+                    TextureBuilder textureBuilder4 = new TextureBuilder(color4, tile_width, tile_height, x, y);
+
+                    BufferedImage mask2 = blend(textureBuilder3.getTexture(), textureBuilder4.getTexture(), horizontal_mask);
+
+                    tile_map[x][y].setImage(blend(mask1, mask2, vertical_mask));
+                } else if (x == width - 1 && y != height - 1) {
                     BufferedImage image_1 = tile_map[x][y].getImage();
-                    BufferedImage image_2 = tile_map[x][y+1].getImage();
-                    tile_map[x][y].setImage(blend(image_1, image_2, vertical_mask));
+                    ColorCafe color2 = tile_map[x][y + 1].getBaseColor();
+                    TextureBuilder textureBuilder2 = new TextureBuilder(color2, tile_width, tile_height, x, y);
+                    tile_map[x][y].setImage(blend(image_1, textureBuilder2.getTexture(), vertical_mask));
+                } else if (y == height - 1 && x != width - 1) {
+                    BufferedImage image_1 = tile_map[x][y].getImage();
+                    ColorCafe color2 = tile_map[x + 1][y].getBaseColor();
+                    TextureBuilder textureBuilder2 = new TextureBuilder(color2, tile_width, tile_height, x, y);
+                    tile_map[x][y].setImage(blend(image_1, textureBuilder2.getTexture(), horizontal_mask));
                 }
+
             }
         }
     }
