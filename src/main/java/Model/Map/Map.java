@@ -14,7 +14,7 @@ public class Map implements Drawable {
 
     public Map(){
         terrain = new Terrain();
-        tile_map = new TileMap(terrain.getTile_map());
+        tile_map = new TileMap(terrain.getTile_map(), 32,32);
 
     }
 
@@ -26,5 +26,9 @@ public class Map implements Drawable {
         tile_map.setX_position(locationOffSet.getX());
         tile_map.setY_position(locationOffSet.getY());
 
+    }
+
+    public TileMap getTile_map() {
+        return tile_map;
     }
 }

@@ -8,6 +8,7 @@ public class Tile {
 
     private double value;
     private BufferedImage image;
+    private BufferedImage texture;
 
     public Tile() {
 
@@ -31,5 +32,13 @@ public class Tile {
 
     public void setValue(double value) {
         this.value = value;
+    }
+
+    public BufferedImage getTexture() {
+        return texture;
+    }
+
+    public void setTexture(BufferedImage texture) {
+        this.texture = texture;
     }
 }

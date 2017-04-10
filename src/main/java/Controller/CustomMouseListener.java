@@ -59,7 +59,9 @@ public class CustomMouseListener implements MouseListener, MouseMotionListener {
 
 
     public void mouseReleased(MouseEvent evt) {
-
+        if (SwingUtilities.isRightMouseButton(evt)) {
+            newLocation = null;
+        }
     }
 
 
