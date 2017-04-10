@@ -28,7 +28,7 @@ public class Terrain implements Drawable {
 
     private int width = COUNT_X * SQUARE_SIZE;
     private int height = COUNT_Y * SQUARE_SIZE;
-    private BufferedImage terrain_image, terrain_mask;
+    private BufferedImage terrain_image, terrain_mask, gray_image;
     private Tile[][] tile_map;
     private float[][] noise_layer, terrain_layer;
     private TileTypes tileTypes;
@@ -78,7 +78,9 @@ public class Terrain implements Drawable {
 
             // terrain gradient
             renderer.clearGradient();
-            /*renderer.addGradientPoint(-1.0, new ColorCafe(0, 0, 0, 255)); //Black
+
+            /*
+            renderer.addGradientPoint(-1.0, new ColorCafe(0, 0, 0, 255)); //Black
             renderer.addGradientPoint(1.0, new ColorCafe(255, 255, 255, 255)); //White
             */
 
@@ -92,9 +94,9 @@ public class Terrain implements Drawable {
             ImageCafe destTexture = new ImageCafe(heightMap.getWidth(), heightMap.getHeight());
             renderer.setSourceNoiseMap(heightMap);
             renderer.setDestImage(destTexture);
-            renderer.enableLight(true);
-            renderer.setLightContrast(2.0); // Triple the contrast
-            renderer.setLightBrightness(2.0); // Double the brightness
+            //renderer.enableLight(true);
+            //renderer.setLightContrast(2.0); // Triple the contrast
+            //renderer.setLightBrightness(2.0); // Double the brightness
 
 
             // Render the texture.
@@ -111,6 +113,7 @@ public class Terrain implements Drawable {
 
 
             terrain_image = buffBuilder(destTexture.getHeight(), destTexture.getWidth(), destTexture);
+            gray_image = buffBuilder(destTexture.getHeight(), destTexture.getWidth(), grayscaleVersion);
             tile_map = textureMapBuilder(destTexture.getHeight(), destTexture.getWidth(), destTexture, grayscaleVersion);
 
 
@@ -120,6 +123,11 @@ public class Terrain implements Drawable {
 
         try {
             ImageIO.write(terrain_image, "png", new File("terrain_test.png"));
+        } catch (IOException e1) {
+            System.out.println("Could not write the image file.");
+        }
+        try {
+            ImageIO.write(gray_image, "png", new File("gray.png"));
         } catch (IOException e1) {
             System.out.println("Could not write the image file.");
         }
@@ -139,7 +147,10 @@ public class Terrain implements Drawable {
                 int green = (rgb >> 8) & 0xFF;
                 int blue = rgb & 0xFF;
 
-                TileType tileType = tileTypes.getTileType(red);
+                int greyRgb =  getRGBA(grayscaleVersion.getValue(x,y));
+                TileType tileType = tileTypes.getTileType((greyRgb >> 16) & 0xFF);
+                //System.out.println(tileType.getName());
+
                 ColorCafe color = new ColorCafe(red, green, blue, 255);
                 TextureBuilder textureBuilder = new TextureBuilder(color, 32, 32, x, y);
 

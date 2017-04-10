@@ -26,8 +26,8 @@ public class TileTypes {
         tileTypes.add(new TileType(new ColorCafe(0, 160, 19, 255), "grass", ++id, -0.3000, lowEnd, highEnd));
         tileTypes.add(new TileType(new ColorCafe(0, 195, 23, 255), "dark_grass", ++id, 0.2000, lowEnd, highEnd));
         tileTypes.add(new TileType(new ColorCafe(127, 102, 50, 255), "light_grass", ++id, 0.5000, lowEnd, highEnd));
-        tileTypes.add(new TileType(new ColorCafe(128, 128, 128, 255), "rock", ++id, 0.6500, lowEnd, highEnd));
-        tileTypes.add(new TileType(new ColorCafe(255, 255, 255, 255), "snow", ++id, 1.0000, lowEnd, highEnd));
+        tileTypes.add(new TileType(new ColorCafe(128, 128, 128, 255), "mud", ++id, 0.6500, lowEnd, highEnd));
+        tileTypes.add(new TileType(new ColorCafe(255, 255, 255, 255), "rock", ++id, 1.0000, lowEnd, highEnd));
 
     }
 
@@ -41,10 +41,21 @@ public class TileTypes {
 
     public TileType getTileType(int rgbValue) {
 
+        double factor = (double) (rgbValue / 255f);
+        double gradientValue = (factor * (highEnd - lowEnd)) + lowEnd;
+        TileType tileType = null;
 
+        for (int a = 0; a < tileTypes.size(); a++) {
 
+            //System.out.println("end "+ tileTypes.get(a).getGradientEnd());
+            //System.out.println("gradient "+ gradientValue);
 
+            if (tileTypes.get(a).getGradientEnd() > gradientValue) {
+                tileType = tileTypes.get(a);
+                break;
+            }
+        }
 
-        return tileTypes.get(0);
+        return tileType;
     }
 }
