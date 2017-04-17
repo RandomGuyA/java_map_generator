@@ -24,7 +24,7 @@ public class TileMap implements Drawable {
         vertical_mask = load_image("/blend_mask_v_32.png");
         //build_tiles();
 
-        blend_tiles();
+       // blend_tiles();
     }
 
     private void blend_tiles() {
